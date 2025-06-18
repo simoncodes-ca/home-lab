@@ -144,6 +144,7 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=postgres
     ports:
       - 8082:80
     depends_on:
