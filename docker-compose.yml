@@ -141,7 +141,7 @@ services:
     container_name: nextcloud
     image: nextcloud:apache
     environment:
-      - POSTGRES_HOST=db
+      - POSTGRES_HOST=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=postgres
