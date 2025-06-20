@@ -5,10 +5,6 @@ volumes:
   n8n_storage:
   open-webui:
   nextcloud_data:
-#  valkey-data:
-#  postgres_data:
-#  minio_data:
-
 
 x-n8n: &service-n8n
   image: n8nio/n8n:latest
@@ -60,13 +56,23 @@ services:
       n8n-import:
         condition: service_completed_successfully
 
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${LITELLM_DB}
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      UI_USERNAME: ${LITELLM_UI_USERNAME}
+      UI_PASSWORD: ${LITELLM_UI_PASSWORD}
+      STORE_MODEL_IN_DB: "True"
+
   nextcloud:
     image: nextcloud:apache
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
       - NEXTCLOUD_ADMIN_USER=${NEXTCLOUD_ADMIN_USER}
       - NEXTCLOUD_ADMIN_PASSWORD=${NEXTCLOUD_ADMIN_PASSWORD}
       - OBJECTSTORE_S3_BUCKET=${OBJECTSTORE_S3_BUCKET}
@@ -83,21 +89,3 @@ services:
     restart: always
     volumes:
       - nextcloud_data:/var/www/html
-
-  # postgres:
-  #   image: postgres:${POSTGRES_VERSION:-latest}
-  #   restart: unless-stopped
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #     interval: 3s
-  #     timeout: 3s
-  #     retries: 10
-  #   expose:
-  #     - 5444/tcp
-  #   environment:
-  #     PGPORT: 5444
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_DB: postgres
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
