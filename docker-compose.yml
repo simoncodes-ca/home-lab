@@ -59,6 +59,8 @@ services:
   litellm:
     image: ghcr.io/berriai/litellm:main-latest
     restart: unless-stopped
+    ports:
+      - 4040:4000
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${LITELLM_DB}
       LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
@@ -82,7 +84,6 @@ services:
       - OBJECTSTORE_S3_PORT=${OBJECTSTORE_S3_PORT}
       - OBJECTSTORE_S3_KEY=${OBJECTSTORE_S3_KEY}
       - OBJECTSTORE_S3_SECRET=${OBJECTSTORE_S3_SECRET}
-      - OBJECTSTORE_S3_STORAGE_CLASS=${OBJECTSTORE_S3_STORAGE_CLASS}
     ports:
       - 8082:80
     extra_hosts:
