@@ -1,0 +1,8 @@
+# User-specific local configurations
+local.zsh
+
+# Completion cache
+.zcompdump*
+
+# History
+.zsh_history
